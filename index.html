@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Zee! ❤️</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Fredoka:wght@400;500;600;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background: #0f0c20;
+      font-family: 'Fredoka', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* MOBILE / TABLET BLOCKER OVERLAY */
+    #deviceBlocker {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: #0f0c20;
+      z-index: 99999;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 30px;
+    }
+
+    .blocker-card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 25px;
+      padding: 35px 25px;
+      max-width: 400px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .blocker-icon {
+      font-size: 4rem;
+      margin-bottom: 15px;
+    }
+
+    .blocker-title {
+      font-size: 1.8rem;
+      color: #ff758c;
+      font-weight: 700;
+      margin-bottom: 15px;
+      line-height: 1.4;
+      text-shadow: 0 0 10px rgba(255, 117, 140, 0.4);
+    }
+
+    .blocker-text {
+      font-size: 1.1rem;
+      color: #f8f8f2;
+      line-height: 1.6;
+    }
+
+    /* COUNTDOWN / DATE LOCK SCREEN */
+    #lockScreen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: linear-gradient(135deg, #1b0222 0%, #3b0618 50%, #0f0c20 100%);
+      z-index: 90000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: center;
+      padding: 35px 20px 20px 20px;
+      overflow-y: auto;
+    }
+
+    .lock-title {
+      font-family: 'Alex Brush', cursive;
+      font-size: 3.6rem;
+      color: #ffb3c1;
+      text-shadow: 0 0 15px #ff4d6d, 0 0 25px #ff758c;
+      margin-top: 10px;
+      margin-bottom: 5px;
+      line-height: 1.3;
+      padding: 5px 10px;
+      z-index: 10;
+    }
+
+    .lock-subtitle {
+      font-size: 1.05rem;
+      color: #f1fa8c;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 15px;
+      text-shadow: 0 0 10px rgba(241, 250, 140, 0.4);
+      z-index: 10;
+    }
+
+    .countdown-container {
+      display: flex;
+      gap: 12px;
+      margin: 10px 0 15px 0;
+      z-index: 10;
+    }
+
+    .time-box {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 15px;
+      padding: 10px 14px;
+      min-width: 65px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    .time-val {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #f1fa8c;
+      text-shadow: 0 0 10px rgba(241, 250, 140, 0.5);
+    }
+
+    .time-label {
+      font-size: 0.75rem;
+      color: #ffb3c1;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 2px;
+    }
+
+    .romantic-msg-box {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px dashed rgba(255, 117, 140, 0.5);
+      border-radius: 18px;
+      padding: 12px 20px;
+      max-width: 420px;
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+      z-index: 10;
+    }
+
+    .romantic-msg-text {
+      font-size: 1.05rem;
+      color: #ffffff;
+      line-height: 1.4;
+      font-weight: 500;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      animation: fadeInMsg 0.8s ease-in-out;
+    }
+
+    /* MINI MEMORY GAME STYLES */
+    .mini-game-container {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 15px;
+      max-width: 360px;
+      width: 100%;
+      z-index: 10;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      margin-bottom: 20px;
+    }
+
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .game-title {
+      font-size: 1.1rem;
+      color: #ffb3c1;
+      font-weight: 600;
+    }
+
+    .game-stats {
+      font-size: 0.9rem;
+      color: #f1fa8c;
+      font-weight: 600;
+    }
+
+    .memory-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .memory-card {
+      aspect-ratio: 1;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease;
+      perspective: 1000px;
+    }
+
+    .memory-card:hover {
+      transform: scale(1.05);
+      background: rgba(255, 117, 140, 0.25);
+    }
+
+    .memory-card.flipped {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: #ff758c;
+      transform: rotateY(180deg);
+    }
+
+    .memory-card.matched {
+      background: rgba(166, 226, 46, 0.25);
+      border-color: #a6e22e;
+      cursor: default;
+      animation: pulse 1s ease-in-out;
+    }
+
+    .restart-btn {
+      background: linear-gradient(45deg, #ff4d6d, #ff758c);
+      color: #fff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+      transition: transform 0.2s ease;
+    }
+
+    .restart-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .lock-bg-heart {
+      position: absolute;
+      font-size: 2.5rem;
+      animation: floatUpLock 6s linear infinite;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.7;
+    }
+
+    @keyframes fadeInMsg {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes floatUpLock {
+      0% { transform: translateY(110vh) scale(0.6) rotate(0deg); opacity: 0.8; }
+      100% { transform: translateY(-120px) scale(1.2) rotate(30deg); opacity: 0; }
+    }
+
+    /* GENERAL SCREEN STYLES */
+    .screen {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 25px;
+      z-index: 100;
+    }
+
+    /* STAGE 1: INTRO TAP COUNTDOWN */
+    #introScreen {
+      background: linear-gradient(135deg, #1a0933 0%, #0f0c20 100%);
+      cursor: pointer;
+    }
+
+    .envelope-icon {
+      font-size: 5rem;
+      animation: pulse 1.5s infinite;
+      margin-bottom: 20px;
+    }
+
+    .tap-counter-text {
+      font-size: 1.5rem;
+      color: #ff79c6;
+      font-weight: 600;
+      line-height: 1.6;
+    }
+
+    .smiley-container {
+      font-size: 3.5rem;
+      margin-top: 15px;
+      display: none;
+      animation: popIn 0.5s ease-out;
+    }
+
+    /* STAGE 2: BIRTHDAY MESSAGE & GAME PROMPT */
+    #messageScreen {
+      background: linear-gradient(135deg, #2b1055 0%, #7597de 100%);
+      display: none;
+    }
+
+    .main-title {
+      font-family: 'Alex Brush', cursive;
+      font-size: 4.8rem;
+      color: #ffffff;
+      text-shadow: 0 0 15px #ff4d6d, 0 0 30px #ff758c;
+      margin-bottom: 15px;
+      line-height: 1.3;
+      padding: 10px;
+    }
+
+    .romantic-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 25px;
+      max-width: 450px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      margin-bottom: 25px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .romantic-card p {
+      font-size: 1.15rem;
+      line-height: 1.6;
+      color: #f8f8f2;
+    }
+
+    .cta-btn {
+      background: linear-gradient(45deg, #ff4d6d, #ff758c);
+      color: #fff;
+      border: none;
+      padding: 15px 35px;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(255, 77, 109, 0.5);
+      transition: transform 0.2s ease;
+      animation: pulse 2s infinite;
+    }
+
+    /* STAGE 3: QUEST SCREEN */
+    #questScreen {
+      background: linear-gradient(-45deg, #1b0222, #3b0618, #120427, #240046);
+      background-size: 400% 400%;
+      animation: gradientBG 12s ease infinite;
+      display: none;
+      z-index: 200;
+      position: fixed;
+      overflow: hidden;
+    }
+
+    #particleCanvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .quest-card {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      width: 100%;
+      max-width: 420px;
+      padding: 10px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .progress-bar-outer {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      backdrop-filter: blur(4px);
+    }
+
+    .progress-bar-inner {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ff758c, #ff7eb3);
+      box-shadow: 0 0 10px #ff758c;
+      transition: width 0.4s ease;
+    }
+
+    .question-title {
+      font-size: 1.45rem;
+      color: #ffffff;
+      margin-bottom: 25px;
+      line-height: 1.4;
+      font-weight: 600;
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.4), 0 2px 10px rgba(0,0,0,0.6);
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .option-btn {
+      background: rgba(255, 255, 255, 0.07);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 16px 20px;
+      border-radius: 20px;
+      font-size: 1.05rem;
+      font-family: 'Fredoka', sans-serif;
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+
+    .option-btn:hover { 
+      background: rgba(255, 117, 140, 0.35); 
+      border-color: rgba(255, 182, 193, 0.6);
+      transform: translateY(-2px) scale(1.01); 
+      box-shadow: 0 8px 25px rgba(255, 117, 140, 0.4);
+    }
+
+    .flash-marks {
+      position: fixed;
+      pointer-events: none;
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: #a6e22e;
+      text-shadow: 0 0 20px #a6e22e, 0 0 40px #ffffff;
+      z-index: 1000;
+      animation: flashPop 1s forwards ease-out;
+    }
+
+    @keyframes flashPop {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+      20% { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
+      80% { opacity: 1; transform: translate(-50%, -80px) scale(1.1); }
+      100% { opacity: 0; transform: translate(-50%, -110px) scale(0.9); }
+    }
+
+    .floating-zee {
+      position: absolute;
+      pointer-events: none;
+      font-family: 'Alex Brush', cursive;
+      font-size: 2.8rem;
+      letter-spacing: 1px;
+      color: #ffffff;
+      text-shadow: 0 0 10px #ff4d6d, 0 0 20px #ff758c, 0 2px 6px rgba(0,0,0,0.8);
+      animation: floatZeeFade 1.3s forwards ease-out;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    /* STAGE 4: BALLOON POPPING SURPRISE */
+    #balloonScreen {
+      background: linear-gradient(135deg, #1a0933 0%, #3a1c71 100%);
+      display: none;
+      z-index: 300;
+    }
+
+    .balloon-grid {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      max-width: 500px;
+      margin-top: 25px;
+    }
+
+    .balloon-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 85px;
+      cursor: pointer;
+    }
+
+    .balloon {
+      width: 70px;
+      height: 85px;
+      background: #ff4d6d;
+      border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: inset -10px -10px 0 rgba(0,0,0,0.15);
+      animation: floatSlow 3s ease-in-out infinite alternate;
+    }
+
+    .balloon::after {
+      content: "";
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-bottom: 8px solid #ff4d6d;
+    }
+
+    .balloon-secret {
+      margin-top: 15px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #f1fa8c;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.4s ease;
+      min-height: 25px;
+    }
+
+    .balloon-wrapper.popped .balloon {
+      animation: popOut 0.3s forwards;
+    }
+
+    .balloon-wrapper.popped .balloon-secret {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* STAGE 5: FINAL GRAND ROMANTIC MESSAGE */
+    #finalScreen {
+      background: linear-gradient(135deg, #2b1055 0%, #ff4d6d 100%);
+      display: none;
+      z-index: 400;
+      overflow: hidden;
+    }
+
+    .top-romantic-animation {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      margin-bottom: 5px;
+      animation: romanticFloat 3s ease-in-out infinite alternate;
+      position: relative;
+      z-index: 10;
+    }
+
+    .romantic-icon {
+      font-size: 3rem;
+      filter: drop-shadow(0 0 10px rgba(255, 117, 140, 0.8));
+      animation: heartBeat 1.4s infinite ease-in-out;
+    }
+
+    .kiss-icon {
+      font-size: 3.2rem;
+      filter: drop-shadow(0 0 12px rgba(255, 77, 109, 0.9));
+      animation: kissRotate 2.5s infinite ease-in-out;
+    }
+
+    .love-title {
+      font-family: 'Alex Brush', cursive;
+      font-size: 4.2rem;
+      color: #fff;
+      text-shadow: 0 0 25px rgba(255, 255, 255, 0.9), 0 0 15px #ff79c6;
+      margin-bottom: 15px;
+      line-height: 1.3;
+      padding: 10px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .final-score-card {
+      background: rgba(255, 255, 255, 0.15);
+      border: 2px solid #f1fa8c;
+      border-radius: 20px;
+      padding: 12px 25px;
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #f1fa8c;
+      margin-bottom: 20px;
+      box-shadow: 0 0 20px rgba(241, 250, 140, 0.4);
+      position: relative;
+      z-index: 10;
+    }
+
+    .interactive-balloon {
+      position: absolute;
+      font-size: 4rem;
+      cursor: pointer;
+      z-index: 500;
+      animation: floatUpBalloon 15s linear forwards;
+      filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+      pointer-events: auto;
+      padding: 15px;
+    }
+
+    .floating-luv-you {
+      position: absolute;
+      font-family: 'Alex Brush', cursive;
+      font-size: 3.8rem;
+      font-weight: bold;
+      color: #ffe600;
+      text-shadow: 0 0 15px #ff0055, 0 0 25px #ffffff;
+      pointer-events: none;
+      z-index: 1000;
+      white-space: nowrap;
+      animation: floatLuvYou 2.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+    }
+
+    .floating-kiss-heart {
+      position: absolute;
+      font-size: 2.2rem;
+      animation: floatUp 4.5s linear infinite;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* ANIMATIONS */
+    @keyframes floatUpBalloon {
+      0% { transform: translateY(115vh) rotate(0deg); opacity: 1; }
+      50% { transform: translateY(50vh) rotate(10deg); opacity: 0.95; }
+      100% { transform: translateY(-130px) rotate(-10deg); opacity: 0; }
+    }
+
+    @keyframes floatLuvYou {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+      20% { opacity: 1; transform: translate(-50%, -80px) scale(1.3); }
+      80% { opacity: 1; transform: translate(-50%, -150px) scale(1.1); }
+      100% { opacity: 0; transform: translate(-50%, -200px) scale(0.9); }
+    }
+
+    @keyframes romanticFloat {
+      0% { transform: translateY(0px) scale(0.98); }
+      100% { transform: translateY(-12px) scale(1.05); }
+    }
+
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.25); }
+    }
+
+    @keyframes kissRotate {
+      0%, 100% { transform: rotate(-8deg) scale(1); }
+      50% { transform: rotate(8deg) scale(1.15); }
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+    @keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+    @keyframes floatSlow { 0% { transform: translateY(0); } 100% { transform: translateY(-12px); } }
+    @keyframes popOut { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(0); opacity: 0; } }
+    
+    @keyframes floatUp { 
+      0% { transform: translateY(105vh) scale(0.6) rotate(0deg); opacity: 1; } 
+      100% { transform: translateY(-100px) scale(1.3) rotate(25deg); opacity: 0; } 
+    }
+    
+    @keyframes floatZeeFade {
+      0% { transform: translate(-50%, 0) scale(0.6); opacity: 0; }
+      20% { opacity: 1; transform: translate(-50%, -15px) scale(1.05); }
+      100% { transform: translate(-50%, -85px) scale(1.25); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="lockScreen">
+    <div class="lock-title">Have Some... Patience ❤️</div>
+
+    <div class="countdown-container">
+      <div class="time-box">
+        <div class="time-val" id="cdDays">00</div>
+        <div class="time-label">Days</div>
+      </div>
+      <div class="time-box">
+        <div class="time-val" id="cdHours">00</div>
+        <div class="time-label">Hours</div>
+      </div>
+      <div class="time-box">
+        <div class="time-val" id="cdMins">00</div>
+        <div class="time-label">Mins</div>
+      </div>
+      <div class="time-box">
+        <div class="time-val" id="cdSecs">00</div>
+        <div class="time-label">Secs</div>
+      </div>
+    </div>
+
+    <div class="lock-subtitle">Surprise Unlocks Strictly On <b>6th September</b>! ✨</div>
+
+    <div class="romantic-msg-box">
+      <div class="romantic-msg-text" id="romanticMsgText">Preparing something magical for Zee... 💖</div>
+    </div>
+
+    <div class="mini-game-container">
+      <div class="game-header">
+        <div class="game-title">Love Match Mini-Game 🧩</div>
+        <div class="game-stats">Moves: <span id="moveCount">0</span></div>
+      </div>
+      <div class="memory-grid" id="memoryGrid"></div>
+      <button class="restart-btn" onclick="initMemoryGame()">Play Again 🔄</button>
+    </div>
+  </div>
+
+  <div id="deviceBlocker">
+    <div class="blocker-card">
+      <div class="blocker-icon">💻🙈</div>
+      <div class="blocker-title">I told you Open this to Laptop baby..</div>
+      <div class="blocker-text">
+        This special magic is made only for big screens! Go grab your laptop! ❤️✨
+      </div>
+    </div>
+  </div>
+
+  <div class="screen" id="introScreen" onclick="handleIntroTap()">
+    <div class="envelope-icon" id="envelopeIcon">💌</div>
+    <div class="tap-counter-text" id="introText">You have a special message...<br><span style="font-size: 1rem; opacity: 0.8;">(Tap to open)</span></div>
+    <div class="smiley-container" id="smileyContainer">😊🥰✨</div>
+  </div>
+
+  <div class="screen" id="messageScreen">
+    <div class="main-title">Happy B'day Zee ❤️</div>
+    <div class="romantic-card">
+      <p>
+        To the most extraordinary girl who fills my life with endless warmth, laughter, and magic—today is all about celebrating you! 🌸
+      </p>
+    </div>
+    <div style="font-size: 1.3rem; color: #f1fa8c; margin-bottom: 20px; font-weight: 600;">
+      Do you wanna play a game? 🎮
+    </div>
+    <button class="cta-btn" onclick="startQuest()">Let's Play! ✨</button>
+  </div>
+
+  <div class="screen" id="questScreen" onmousemove="handleQuestHover(event)">
+    <canvas id="particleCanvas"></canvas>
+    
+    <div style="font-size: 0.85rem; color: #ffb3c1; font-weight: 700; letter-spacing: 1.5px; margin-bottom: 12px; z-index: 10; text-shadow: 0 0 10px rgba(255,179,193,0.5);" id="questBadge">QUESTION 1 OF 6</div>
+    
+    <div class="quest-card">
+      <div class="progress-bar-outer">
+        <div class="progress-bar-inner" id="questProgress"></div>
+      </div>
+      <div class="question-title" id="questionTitle">Loading...</div>
+      <div class="options-grid" id="optionsGrid"></div>
+    </div>
+  </div>
+
+  <div class="screen" id="balloonScreen">
+    <div style="font-size: 3rem; font-family: 'Alex Brush', cursive; color: #ffb3c1; margin-bottom: 5px; text-shadow: 0 0 10px #ff4d6d;">A Little Surprise For You...</div>
+    <p style="color: #f8f8f2; font-size: 1.1rem;">Tap each balloon to see what's behind! 🎈</p>
+
+    <div class="balloon-grid">
+      <div class="balloon-wrapper" onclick="popBalloon(this, 'Gorgeous ✨')">
+        <div class="balloon" style="background:#ff4d6d;">🎈</div>
+        <div class="balloon-secret">Gorgeous ✨</div>
+      </div>
+      <div class="balloon-wrapper" onclick="popBalloon(this, 'Kind-Hearted 🌸')">
+        <div class="balloon" style="background:#ff758c; animation-delay: 0.5s;">🎈</div>
+        <div class="balloon-secret">Kind-Hearted 🌸</div>
+      </div>
+      <div class="balloon-wrapper" onclick="popBalloon(this, 'My Safe Haven 🏡')">
+        <div class="balloon" style="background:#ff7eb3; animation-delay: 1s;">🎈</div>
+        <div class="balloon-secret">My Safe Haven 🏡</div>
+      </div>
+      <div class="balloon-wrapper" onclick="popBalloon(this, 'My Whole World 🌍')">
+        <div class="balloon" style="background:#bd93f9; animation-delay: 1.5s;">🎈</div>
+        <div class="balloon-secret">My Whole World 🌍</div>
+      </div>
+      <div class="balloon-wrapper" onclick="popBalloon(this, 'Forever Mine 💖')">
+        <div class="balloon" style="background:#ff5555; animation-delay: 2s;">🎈</div>
+        <div class="balloon-secret">Forever Mine 💖</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen" id="finalScreen">
+    
+    <div class="top-romantic-animation">
+      <span class="romantic-icon">💖</span>
+      <span class="kiss-icon">💋</span>
+      <span class="romantic-icon">✨</span>
+      <span class="kiss-icon">💋</span>
+      <span class="romantic-icon">💖</span>
+    </div>
+
+    <div class="love-title">Happy Birthday Once Again to Zee ❤️</div>
+    
+    <div class="final-score-card">
+      🏆 Final Score: 100 / 100 (Grade: A+++ Perfect!)
+    </div>
+
+    <div class="romantic-card" style="background: rgba(0,0,0,0.25);">
+      <p style="font-size: 1.2rem; line-height: 1.7;">
+        Happy Birthday my precious Zee! Thank you for being my light, my best friend, and my greatest happiness. May your year ahead be as breathtakingly beautiful as you are! ✨
+      </p>
+    </div>
+  </div>
+
+  <script>
+    /* ----------------------------------------------------
+       DATE LOCK & COUNTDOWN LOGIC (TARGET: 6TH SEPT)
+    ---------------------------------------------------- */
+    function checkTargetDateLock() {
+      const now = new Date();
+      let targetYear = now.getFullYear();
+      let targetDate = new Date(targetYear, 8, 6, 0, 0, 0); // Month 8 = September
+
+      if (now.getMonth() > 8 || (now.getMonth() === 8 && now.getDate() > 6)) {
+        targetDate = new Date(targetYear + 1, 8, 6, 0, 0, 0);
+      }
+
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        document.getElementById('lockScreen').style.display = 'none';
+        checkDeviceType();
+      } else {
+        document.getElementById('lockScreen').style.display = 'flex';
+        
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const mins = Math.floor((diff / (1000 * 60)) % 60);
+        const secs = Math.floor((diff / 1000) % 60);
+
+        document.getElementById('cdDays').textContent = String(days).padStart(2, '0');
+        document.getElementById('cdHours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('cdMins').textContent = String(mins).padStart(2, '0');
+        document.getElementById('cdSecs').textContent = String(secs).padStart(2, '0');
+      }
+    }
+
+    setInterval(checkTargetDateLock, 1000);
+    checkTargetDateLock();
+
+    /* RANDOM ROMANTIC MESSAGES CYCLING */
+    const lockMessages = [
+      "Counting down the seconds until your special moment... 💖",
+      "Good things take time, but the best things are worth waiting for ✨",
+      "Thinking about how radiant your smile is going to be on Sept 6th! 🥰",
+      "A tiny secret is waiting just behind this timer for Zee... 🌸",
+      "Hold on tight, baby... almost time to celebrate YOU! ❤️",
+      "Every tick of the clock brings us closer to your big surprise! 🎈"
+    ];
+
+    let msgIndex = 0;
+    function cycleLockMessages() {
+      const msgEl = document.getElementById('romanticMsgText');
+      if (!msgEl) return;
+      msgEl.style.animation = 'none';
+      void msgEl.offsetWidth;
+      msgEl.style.animation = 'fadeInMsg 0.8s ease-in-out';
+      msgEl.textContent = lockMessages[msgIndex];
+      msgIndex = (msgIndex + 1) % lockMessages.length;
+    }
+
+    setInterval(cycleLockMessages, 4000);
+    cycleLockMessages();
+
+    /* FLOATING ANIMATED HEARTS ON LOCK SCREEN */
+    function spawnLockFloatingHearts() {
+      const lockScreen = document.getElementById('lockScreen');
+      const symbols = ['💖', '💕', '💋', '✨', '🌸', '❤️'];
+
+      setInterval(() => {
+        if (lockScreen.style.display === 'none') return;
+        const heart = document.createElement('div');
+        heart.className = 'lock-bg-heart';
+        heart.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        heart.style.left = `${Math.random() * 90 + 5}vw`;
+        heart.style.animationDuration = `${Math.random() * 2.5 + 4}s`;
+        lockScreen.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 6500);
+      }, 450);
+    }
+    spawnLockFloatingHearts();
+
+    /* ----------------------------------------------------
+       MINI LOVE MEMORY MATCH GAME LOGIC
+    ---------------------------------------------------- */
+    const memoryEmojis = ['💖', '💋', '🌸', '🎁', '💎', '👑', '✨', '🧸'];
+    let cardValues = [];
+    let flippedCards = [];
+    let matchedPairs = 0;
+    let moves = 0;
+
+    function initMemoryGame() {
+      const grid = document.getElementById('memoryGrid');
+      grid.innerHTML = '';
+      flippedCards = [];
+      matchedPairs = 0;
+      moves = 0;
+      document.getElementById('moveCount').textContent = moves;
+
+      // Duplicate and shuffle emojis
+      cardValues = [...memoryEmojis, ...memoryEmojis].sort(() => Math.random() - 0.5);
+
+      cardValues.forEach((val, idx) => {
+        const card = document.createElement('div');
+        card.className = 'memory-card';
+        card.dataset.value = val;
+        card.dataset.index = idx;
+        card.onclick = () => flipMemoryCard(card);
+        grid.appendChild(card);
+      });
+    }
+
+    function flipMemoryCard(card) {
+      if (card.classList.contains('flipped') || card.classList.contains('matched') || flippedCards.length >= 2) {
+        return;
+      }
+
+      card.classList.add('flipped');
+      card.textContent = card.dataset.value;
+      flippedCards.push(card);
+
+      if (flippedCards.length === 2) {
+        moves++;
+        document.getElementById('moveCount').textContent = moves;
+
+        const [card1, card2] = flippedCards;
+
+        if (card1.dataset.value === card2.dataset.value) {
+          card1.classList.add('matched');
+          card2.classList.add('matched');
+          flippedCards = [];
+          matchedPairs++;
+
+          if (matchedPairs === memoryEmojis.length) {
+            setTimeout(() => {
+              confetti({ particleCount: 50, spread: 70, origin: { y: 0.7 } });
+            }, 300);
+          }
+        } else {
+          setTimeout(() => {
+            card1.classList.remove('flipped');
+            card2.classList.remove('flipped');
+            card1.textContent = '';
+            card2.textContent = '';
+            flippedCards = [];
+          }, 800);
+        }
+      }
+    }
+
+    initMemoryGame();
+
+    /* ----------------------------------------------------
+       DEVICE CHECK: BLOCK MOBILE & TABLET DEVICES
+    ---------------------------------------------------- */
+    function checkDeviceType() {
+      if (document.getElementById('lockScreen').style.display !== 'none') return;
+
+      const isMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isSmallScreen = window.innerWidth <= 850;
+
+      if (isMobileUserAgent || isSmallScreen) {
+        document.getElementById('deviceBlocker').style.display = 'flex';
+        document.querySelectorAll('.screen').forEach(el => el.style.display = 'none');
+      } else {
+        document.getElementById('deviceBlocker').style.display = 'none';
+      }
+    }
+
+    window.addEventListener('resize', checkDeviceType);
+
+    /* ----------------------------------------------------
+       STAGE 1 LOGIC: INTRO TAPS
+    ---------------------------------------------------- */
+    let tapCount = 0;
+
+    function handleIntroTap() {
+      tapCount++;
+      const introText = document.getElementById('introText');
+      const smileyContainer = document.getElementById('smileyContainer');
+
+      if (tapCount === 1) {
+        introText.innerHTML = "Click 2 more times 😉";
+      } else if (tapCount === 2) {
+        introText.innerHTML = "Click 1 more time 💖";
+      } else if (tapCount === 3) {
+        smileyContainer.style.display = "block";
+        introText.innerHTML = "Smile like this! 😊✨<br><span style='font-size: 1.2rem; color: #f1fa8c;'>Tap to Open 💌</span>";
+      } else if (tapCount >= 4) {
+        document.getElementById('introScreen').style.display = 'none';
+        document.getElementById('messageScreen').style.display = 'flex';
+        triggerFireworksOnce(1500);
+      }
+    }
+
+    /* ----------------------------------------------------
+       STAGE 2 LOGIC: START GAME QUEST
+    ---------------------------------------------------- */
+    function startQuest() {
+      document.getElementById('messageScreen').style.display = 'none';
+      const questScreen = document.getElementById('questScreen');
+      questScreen.style.display = 'flex';
+      initParticleCanvas();
+      loadQuestion();
+    }
+
+    /* LIVE INTERACTIVE BACKGROUND FOR QUEST */
+    function initParticleCanvas() {
+      const canvas = document.getElementById('particleCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const particles = [];
+      const symbols = ['💖', '✨', '🌸', '💕', '⭐'];
+
+      for (let i = 0; i < 25; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 16 + 10,
+          speedY: Math.random() * 0.8 + 0.4,
+          symbol: symbols[Math.floor(Math.random() * symbols.length)],
+          opacity: Math.random() * 0.6 + 0.3
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.y -= p.speedY;
+          if (p.y < -20) p.y = canvas.height + 20;
+          ctx.font = `${p.size}px serif`;
+          ctx.globalAlpha = p.opacity;
+          ctx.fillText(p.symbol, p.x, p.y);
+        });
+        requestAnimationFrame(animate);
+      }
+      animate();
+    }
+
+    /* FLOATING ZEE + HEARTS CURSOR LOGIC */
+    let lastSpawnTime = 0;
+
+    function handleQuestHover(e) {
+      if (!e.target.closest('.option-btn')) {
+        spawnZeeFloatingText(e.clientX, e.clientY);
+      }
+    }
+
+    function spawnZeeFloatingText(x, y) {
+      const now = Date.now();
+      if (now - lastSpawnTime < 180) return;
+      lastSpawnTime = now;
+
+      const zeeEl = document.createElement('div');
+      zeeEl.className = 'floating-zee';
+      zeeEl.innerHTML = `Zee ${['❤️', '💖', '💕', '✨', '🌸'][Math.floor(Math.random() * 5)]}`;
+      zeeEl.style.left = `${x}px`;
+      zeeEl.style.top = `${y}px`;
+
+      document.getElementById('questScreen').appendChild(zeeEl);
+      setTimeout(() => zeeEl.remove(), 1300);
+    }
+
+    /* ----------------------------------------------------
+       STAGE 3 LOGIC: 6 QUESTIONS
+    ---------------------------------------------------- */
+    const questData = [
+      {
+        question: "What makes Zee so uniquely special?",
+        pts: 16,
+        options: ["Her radiant smile", "Her kind and caring soul", "How effortless she makes me feel happy", "All of these & so much more! ❤️"]
+      },
+      {
+        question: "Who holds the key to making every bad day instantly better?",
+        pts: 17,
+        options: ["Zee, without a doubt! ✨", "Definitely Zee 💕"]
+      },
+      {
+        question: "What happens when Zee laughs?",
+        pts: 17,
+        options: ["The whole world lights up 🌟", "My heart skips a beat 💓"]
+      },
+      {
+        question: "How precious is Zee to me?",
+        pts: 16,
+        options: ["More than words can ever describe 📜", "More than all stars in the sky ✨"]
+      },
+      {
+        question: "What is my absolute favorite place in the world?",
+        pts: 17,
+        options: ["Right next to Zee ❤️", "Wherever Zee is 🏡"]
+      },
+      {
+        question: "How much do I love celebrating Zee today?",
+        pts: 17,
+        options: ["To infinity and beyond! 🚀💖", "10000/10 level forever! 🎉"]
+      }
+    ];
+
+    let currentQuestIndex = 0;
+
+    function loadQuestion() {
+      const data = questData[currentQuestIndex];
+      document.getElementById('questBadge').textContent = `QUESTION ${currentQuestIndex + 1} OF ${questData.length}`;
+      document.getElementById('questionTitle').textContent = data.question;
+      document.getElementById('questProgress').style.width = `${((currentQuestIndex + 1) / questData.length) * 100}%`;
+
+      const optionsGrid = document.getElementById('optionsGrid');
+      optionsGrid.innerHTML = "";
+
+      data.options.forEach((opt) => {
+        const btn = document.createElement('button');
+        btn.className = "option-btn";
+        btn.textContent = opt;
+        btn.onclick = (e) => handleOptionSelect(e, data.pts);
+        optionsGrid.appendChild(btn);
+      });
+    }
+
+    function handleOptionSelect(event, addedPts) {
+      flashMarksOverlay(event.clientX, event.clientY, addedPts);
+      
+      currentQuestIndex++;
+
+      if (currentQuestIndex < questData.length) {
+        setTimeout(loadQuestion, 400);
+      } else {
+        setTimeout(() => {
+          document.getElementById('questScreen').style.display = 'none';
+          document.getElementById('balloonScreen').style.display = 'flex';
+        }, 500);
+      }
+    }
+
+    function flashMarksOverlay(x, y, pts) {
+      const flashEl = document.createElement('div');
+      flashEl.className = 'flash-marks';
+      flashEl.textContent = `+${pts}`;
+
+      flashEl.style.left = `${x || window.innerWidth / 2}px`;
+      flashEl.style.top = `${y || window.innerHeight / 2}px`;
+
+      document.body.appendChild(flashEl);
+      setTimeout(() => flashEl.remove(), 1000);
+    }
+
+    /* ----------------------------------------------------
+       STAGE 4 LOGIC: BALLOON POPPING
+    ---------------------------------------------------- */
+    let poppedCount = 0;
+    const totalBalloons = 5;
+
+    function popBalloon(wrapper, word) {
+      if (wrapper.classList.contains('popped')) return;
+
+      wrapper.classList.add('popped');
+      poppedCount++;
+
+      confetti({ particleCount: 50, spread: 80, origin: { y: 0.6 }, zIndex: 2000 });
+
+      if (poppedCount === totalBalloons) {
+        setTimeout(() => {
+          document.getElementById('balloonScreen').style.display = 'none';
+          document.getElementById('finalScreen').style.display = 'flex';
+          triggerGrandFinale();
+        }, 1200);
+      }
+    }
+
+    /* ----------------------------------------------------
+       STAGE 5 LOGIC: GRAND FINALE
+    ---------------------------------------------------- */
+    let isFinaleRunning = false;
+
+    function triggerGrandFinale() {
+      if (isFinaleRunning) return;
+      isFinaleRunning = true;
+
+      firecrackerBurst();
+      setTimeout(firecrackerBurst, 300);
+      setTimeout(firecrackerBurst, 600);
+
+      setInterval(() => {
+        firecrackerBurst();
+      }, 2000);
+
+      spawnFloatingKissesAndHearts();
+      startSpawningRandomBalloons();
+    }
+
+    function firecrackerBurst() {
+      confetti({
+        particleCount: 120,
+        startVelocity: 45,
+        spread: 360,
+        ticks: 90,
+        origin: { x: Math.random() * 0.8 + 0.1, y: Math.random() * 0.5 + 0.1 },
+        colors: ['#ff4d6d', '#ff758c', '#ff7eb3', '#f1fa8c', '#a6e22e', '#bd93f9', '#ffffff'],
+        zIndex: 5000
+      });
+    }
+
+    function triggerFireworksOnce(duration) {
+      const animationEnd = Date.now() + duration;
+      const interval = setInterval(() => {
+        const timeLeft = animationEnd - Date.now();
+        if (timeLeft <= 0) return clearInterval(interval);
+
+        confetti({
+          particleCount: 40,
+          startVelocity: 30,
+          spread: 360,
+          origin: { x: Math.random(), y: Math.random() - 0.2 },
+          zIndex: 5000
+        });
+      }, 250);
+    }
+
+    function spawnFloatingKissesAndHearts() {
+      const finalScreen = document.getElementById('finalScreen');
+      const items = ['💋', '💖', '💕', '✨', '🌸', '❤️', '💋'];
+
+      setInterval(() => {
+        const el = document.createElement('div');
+        el.className = 'floating-kiss-heart';
+        el.textContent = items[Math.floor(Math.random() * items.length)];
+        el.style.left = `${Math.random() * 90 + 5}vw`;
+        el.style.animationDuration = `${Math.random() * 2 + 3.5}s`;
+        finalScreen.appendChild(el);
+
+        setTimeout(() => el.remove(), 5000);
+      }, 300);
+    }
+
+    function startSpawningRandomBalloons() {
+      const finalScreen = document.getElementById('finalScreen');
+      const balloonEmojis = ['🎈', '🎈', '🎈'];
+
+      setInterval(() => {
+        const balloon = document.createElement('div');
+        balloon.className = 'interactive-balloon';
+        balloon.textContent = balloonEmojis[Math.floor(Math.random() * balloonEmojis.length)];
+        
+        balloon.style.left = `${Math.random() * 80 + 10}vw`;
+        balloon.style.animationDuration = `${Math.random() * 4 + 12}s`;
+
+        const handleTrigger = (e) => {
+          const rect = balloon.getBoundingClientRect();
+          const clientX = rect.left + rect.width / 2;
+          const clientY = rect.top + rect.height / 2;
+          
+          popInteractiveBalloon(clientX, clientY);
+          balloon.remove();
+        };
+
+        balloon.addEventListener('mouseenter', handleTrigger);
+
+        finalScreen.appendChild(balloon);
+
+        setTimeout(() => balloon.remove(), 16000);
+      }, 2200);
+    }
+
+    function popInteractiveBalloon(x, y) {
+      confetti({
+        particleCount: 40,
+        spread: 70,
+        origin: { x: x / window.innerWidth, y: y / window.innerHeight },
+        zIndex: 5000
+      });
+
+      const luvText = document.createElement('div');
+      luvText.className = 'floating-luv-you';
+      luvText.textContent = 'Luv you ❤️';
+      luvText.style.left = `${x}px`;
+      luvText.style.top = `${y}px`;
+
+      document.body.appendChild(luvText);
+
+      setTimeout(() => luvText.remove(), 2200);
+    }
+  </script>
+</body>
+</html>
